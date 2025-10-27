@@ -1,21 +1,13 @@
-# -------------------- Base image --------------------
-FROM python:slim
+# Use a compatible Python version
+FROM python:3.11-slim
 
-# -------------------- Working directory --------------------
 WORKDIR /app
+COPY . /app
 
-# -------------------- Environment setup --------------------
-ENV PYTHONUNBUFFERED=1
-ENV PORT=4000
-
-# -------------------- Copy & install dependencies --------------------
-COPY requirements.txt .
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# -------------------- Copy application --------------------
-COPY python-eq/ ./python-eq/
-COPY .env ./python-eq/.env
+EXPOSE 8000
 
-# -------------------- Expose & start --------------------
-EXPOSE 4000
-CMD ["python", "python-eq/main_strawberry.py"]
+# Start your FastAPI + Strawberry app
+CMD ["uvicorn", "main_strawberry:app", "--host", "0.0.0.0", "--port", "8000"]
